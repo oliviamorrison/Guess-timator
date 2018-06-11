@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 450px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      padding-top: 20px;
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height:auto;} 
+    }
+  </style>
+</head>
+<body>
+
+
+  
+<div class="container-fluid text-center center">    
+  <div class="container">
+    
+    <div class="col-sm-8 text-left"> 
+      <h1 class="text-center">Guess-timator</h1>
+      <h1 class="text-center">infographic</h1>
+	  <!-- <img class="img-responsive" src="test.jpg" alt="test"> -->
+	  <hr>
+      <h1>Questions</h1>
+	  
+	<div class="container">
+	 
+	    <div id="Citizen">
+		NZ Citizen?
+		<br>      
+	    <button class="btn btn-primary" data-question="isCitizen" data-value="true" onclick="updateIsCitizen(true)" type="button" class="btn btn-default">Yes</button>      
+	    <button class="btn btn-primary" data-question="isCitizen" data-value="false" onclick="updateIsCitizen(false)" type="button" class="btn btn-default">No</button>
+		</div>
+		<br> <br> 
+
+		<div hidden id="Student">
+		Are you a Student?
+		<br> 
+		<button class="btn btn-primary" data-question="isStudent" data-value="true" onclick="updateIsStudent(true)" type="button" class="btn btn-default">Yes</button>      
+		<button class="btn btn-primary" data-question="isStudent" data-value="false" onclick="updateIsStudent(false)"type="button" class="btn btn-default">No</button>
+		</div>
+		<br> <br> 
+		<div hidden id="Kids">
+		Do you have kids?
+		<br> 
+		<button class="btn btn-primary" data-question="isKids" data-value="true" onclick="updateIsKids(true)" type="button" class="btn btn-default">Yes</button>      
+		<button class="btn btn-primary" data-question="isKids" data-value="false" onclick="updateIsKids(false)"type="button" class="btn btn-default">No</button>
+		</div>
+		<br> <br> 	
+		<div hidden id="Disability">
+		Do you have a disability?
+		<br> 
+		<button class="btn btn-primary" data-question="isDisability" data-value="true" onclick="updateIsDisabilty(true)" type="button" class="btn btn-default">Yes</button>      
+		<button class="btn btn-primary" data-question="isDisability" data-value="false" onclick="updateIsDisabilty(false)"type="button" class="btn btn-default">No</button>
+		</div>
+		<br> <br> 
+		<div hidden id="Age">
+		Are you over the age of 65?
+		<br> 
+		<button class="btn btn-primary" data-question="isAge" data-value="true"  onclick="updateIsAge(true)" type="button" class="btn btn-default">Yes</button>      
+		<button class="btn btn-primary" data-question="isAge" data-value="false" onclick="updateIsAge(false)"type="button" class="btn btn-default">No</button>
+		</div>
+		<br><br>
+		<div hidden id="NotCitizen">
+			Unfortunately you are not eligible for government financial support
+		</div>
+		<h1 hidden id='Eligible title'>You are eligible for:</h1>
+		<div hidden id="Student loan">
+			Student loan
+		</div>
+		<div hidden id="Child support">
+			Child support
+		</div>
+		<div hidden id="Disability support">
+			Disability support
+		</div>
+		<div hidden id="Pension">
+			Pension
+		</div>
+
+		
+		<script>
+		var questions = {
+			citizen: document.getElementById('Citizen'),
+			notcitizen: document.getElementById('NotCitizen'),
+			student: document.getElementById('Student'),
+			kids: document.getElementById('Kids'),
+			disability: document.getElementById('Disability'),
+			age: document.getElementById('Age'),
+		}
+		var eligibility = [];
+	
+		debugger;
+		var state = {}
+		
+		function render (state) {
+			//reset();
+			document.querySelectorAll("button").forEach(function(element){
+				var questionType = element.getAttribute("data-question");
+				var typeBoolean = element.getAttribute("data-value")=="true";
+
+				if(state[questionType] ==typeBoolean){
+					element.classList.add("active");
+				}
+			});
+			if (state.isCitizen == null) {
+			    showQuestion('citizen');
+				return;
+			}
+			if(state.isCitizen==false){
+				showQuestion('notcitizen');
+			}
+			
+			if (state.isStudent == null && state.isCitizen==true) {
+			    showQuestion('student');
+				return;
+			}
+			if (state.isKids == null&& state.isCitizen==true) {
+			    showQuestion('kids');
+				return;
+			}
+			if (state.isDisability == null&& state.isCitizen==true) {
+			    showQuestion('disability');
+				return;
+			}if (state.isAge == null&& state.isCitizen==true) {
+			    showQuestion('age');
+				return;
+			}
+			debugger;
+			if(state.isStudent!=null && state.isKids!=null &&state.isDisability!=null && state.isAge!=null && state.isCitizen){
+				showEligibility();
+			}
+		}
+		
+		function reset () {
+		    var questionNames = Object.keys(questions);
+			questionNames.forEach(function (name) {
+			    questions[name].style.display = 'none';
+			});
+		}
+		
+		function showQuestion (questionName) {
+		    var question = questions[questionName];
+			question.style.display = "block";
+		}
+		
+		render(state);
+		
+		function updateState (newState) {
+			debugger;
+		    state = Object.assign({}, state, newState)
+			updateEligibility(state);
+			render(state);
+
+		}
+		
+		function updateIsCitizen (value) {
+		    debugger;
+		    updateState({ isCitizen: value });
+		}
+		
+		function updateIsStudent (value) {
+		    debugger;
+		    updateState({ isStudent: value });
+		}
+		function updateIsKids (value) {
+		    debugger;
+		    updateState({ isKids: value });
+		}
+		function updateIsDisabilty (value) {
+		    debugger;
+		    updateState({ isDisability: value });
+		}
+		function updateIsAge (value) {
+		    debugger;
+		    updateState({ isAge: value });
+		}
+		
+
+		function updateEligibility (state) {
+		    
+			
+			if (!state.isCitizen) {
+    			return eligibility;
+			}
+			if (state.isStudent) {
+			    eligibility.push('Student loan');
+			}
+			if (state.isKids){
+			    eligibility.push('Child support');
+			}
+			if (state.isDisability){
+			    eligibility.push('Disability support');
+			}
+			if (state.isAge){
+			    eligibility.push('Pension');
+			}
+			
+		}
+		function showEligibility(){
+			if(eligibility.length===0){
+				document.getElementById('NotCitizen').style.display = 'block';
+			}else{
+				document.getElementById('Eligible title').style.display = 'block';
+			}
+			eligibility.forEach(function (name) {
+				document.getElementById(name).style.display = 'block';
+			});
+			
+		}
+		
+		
+		</script>
+	</div>
+	
+
+    </div>
+    
+  </div>
+</div>
+
+
+
+</body>
+</html>
